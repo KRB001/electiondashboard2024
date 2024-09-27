@@ -8,3 +8,9 @@ class NetworkError(BaseException):
     """Raised when no connection is able to be established due to network issues"""
     def __init__(self, message):
         super().__init__(message)
+
+
+class DriverAccessError(BaseException):
+    """Raised when the driver is unable to access a page"""
+    def __init__(self, message):
+        super().__init__(message)
