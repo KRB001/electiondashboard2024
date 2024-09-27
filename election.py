@@ -52,7 +52,7 @@ for state in config['swing_states']:
     state_leader_string = generate_leader_string(scrape_state, state_curr, state_prev,
                                                  config['dem_contender'], config['rep_contender'])
 
-    print(BOLD + state.replace("-", " ").capitalize() + ": " + RESET + state_leader_string + RESET)
+    print(BOLD + state.replace("-", " ").title() + ": " + RESET + state_leader_string + RESET)
 
     if config['dem_contender'] == scrape_state[0]:
         config['state_previous'][state_index] = state_curr
@@ -60,6 +60,8 @@ for state in config['swing_states']:
         config['state_previous'][state_index] = state_curr * -1.0
 
     state_index = state_index + 1
+
+print("******************************\n")
 
 with open("config.yaml", "w") as yamlfile:
     yaml.dump(config, yamlfile)

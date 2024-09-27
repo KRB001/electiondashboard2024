@@ -65,18 +65,18 @@ def generate_leader_string(scrape, curr, prev, dem, rep):
 
     leader_string = leader_string + scrape[0] + str(scrape[1])
 
-    if diff > 0:
+    if diff > 0.0:
         if dem == scrape[0]:
             leader_string = leader_string + RESET + DEM + " (" + "+"
         else:
             leader_string = leader_string + RESET + DEM + " (" + "-"
-    elif diff < 0:
+    elif diff < 0.0:
         if dem  == scrape[0]:
             leader_string = leader_string + RESET + REP + " (" + "-"
         else:
             leader_string = leader_string + RESET + REP + " (" + "+"
     else:
-        leader_string = leader_string + "(~"
+        leader_string = leader_string + RESET + "(~"
 
     leader_string = leader_string + str(abs(diff))[0:3] + ")"
 
