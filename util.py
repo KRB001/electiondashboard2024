@@ -6,6 +6,11 @@ from selenium.common import *
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 
+BOLD = "\033[1m"
+RESET = "\033[0m"
+DEM = "\033[1;34m"
+REP = "\033[1;31m"
+
 def do_request(url):
     headers_get = {
         'User-Agent': 'Mozilla/5.0'
@@ -43,3 +48,36 @@ def do_driver(url, class_names):
             results.append(driver.find_element(By.CLASS_NAME, class_name).text)
 
         return results
+
+
+def generate_leader_string(scrape, curr, prev, dem, rep):
+    if rep == scrape[0]:
+        curr = curr * -1.0
+
+    diff = curr - prev
+
+    leader_string = ""
+
+    if dem == scrape[0]:
+        leader_string = leader_string + DEM
+    else:
+        leader_string = leader_string + REP
+
+    leader_string = leader_string + scrape[0] + str(scrape[1])
+
+    if diff > 0:
+        if dem == scrape[0]:
+            leader_string = leader_string + RESET + DEM + " (" + "+"
+        else:
+            leader_string = leader_string + RESET + DEM + " (" + "-"
+    elif diff < 0:
+        if dem  == scrape[0]:
+            leader_string = leader_string + RESET + REP + " (" + "-"
+        else:
+            leader_string = leader_string + RESET + REP + " (" + "+"
+    else:
+        leader_string = leader_string + "(~"
+
+    leader_string = leader_string + str(abs(diff))[0:3] + ")"
+
+    return leader_string

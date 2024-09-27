@@ -32,38 +32,34 @@ prev = config['national_previous']
 
 curr = float(scrape_national[1].replace("+", ""))
 
-if config['rep_contender'] == scrape_national[0]:
-    curr = curr * -1.0
-
-diff = curr - prev
-
-leader_string = ""
+print(generate_leader_string(scrape_national, curr, prev, config['dem_contender'], config['rep_contender']))
 
 if config['dem_contender'] == scrape_national[0]:
-    leader_string = leader_string + DEM
+    config['national_previous'] = curr
 else:
-    leader_string = leader_string + REP
+    config['national_previous'] = curr * -1.0
 
-leader_string = leader_string + scrape_national[0] + str(scrape_national[1])
+print(RESET + "\n*****SWING*STATE*AVERAGES*****\n")
 
-if diff >= 0:
-    if config['dem_contender'] == scrape_national[0]:
-        leader_string = leader_string + RESET + DEM + " (" + "+"
+state_index = 0
+for state in config['swing_states']:
+
+    scrape_state = do_driver("" + config['base_url'] + config['year'] + "/" + state,
+                 ["hover-leader-fg", "hover-leader-amt"])
+    state_prev = float(config['state_previous'][state_index])
+    state_curr = float(scrape_state[1].replace("+", ""))
+
+    state_leader_string = generate_leader_string(scrape_state, state_curr, state_prev,
+                                                 config['dem_contender'], config['rep_contender'])
+
+    print(BOLD + state.replace("-", " ").capitalize() + ": " + RESET + state_leader_string + RESET)
+
+    if config['dem_contender'] == scrape_state[0]:
+        config['state_previous'][state_index] = state_curr
     else:
-        leader_string = leader_string + RESET + REP + " (" + "-"
-else:
-    if config['dem_contender'] == scrape_national[0]:
-        leader_string = leader_string + RESET + REP + " (" + "-"
-    else:
-        leader_string = leader_string + RESET + DEM + " (" + "+"
+        config['state_previous'][state_index] = state_curr * -1.0
 
-leader_string = leader_string + str(abs(diff))[0:3] + ")"
-
-print(leader_string)
-config['national_previous'] = curr
-
-print(RESET + "\n******************************")
-print(RESET + "\n*****SWING*STATE*AVERAGES*****")
+    state_index = state_index + 1
 
 with open("config.yaml", "w") as yamlfile:
     yaml.dump(config, yamlfile)
